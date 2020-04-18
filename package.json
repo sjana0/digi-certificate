@@ -1,0 +1,19 @@
+{
+  "name": "digital-certificate",
+  "version": "0.0.0",
+  "description": "Using ethereum solidity and ipfs to create digital verifiable certificate",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Soumyanil Jana",
+  "license": "ISC",
+  "dependencies": {
+    "create-react-app": "^3.4.1",
+    "ipfs-http-client": "^44.0.0",
+    "keythereum": "^1.0.4",
+    "randombytes": "^2.1.0",
+    "react-bootstrap": "^1.0.0",
+    "underscore": "^1.10.2"
+  }
+}

@@ -1,5 +1,3 @@
-BufferList = require('bl/BufferList');
-
 class certIpfsMethods {
     constructor(link) {
         this.ipfsHttpClient = require('ipfs-http-client');
@@ -21,6 +19,7 @@ class certIpfsMethods {
     
     getCert = async (cid) => {
         for await (const file of this.ipfs.get(cid)) {
+            const BufferList = require('bl/BufferList');
             const content = new BufferList()
             for await (const chunk of file.content) {
               content.append(chunk)

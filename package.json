@@ -12,8 +12,10 @@
     "create-react-app": "^3.4.1",
     "ipfs-http-client": "^44.0.0",
     "keythereum": "^1.0.4",
+    "number-to-bn": "^1.7.0",
     "randombytes": "^2.1.0",
     "react-bootstrap": "^1.0.0",
-    "underscore": "^1.10.2"
+    "underscore": "^1.10.2",
+    "utf8": "^3.0.0"
   }
 }

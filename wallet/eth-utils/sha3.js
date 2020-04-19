@@ -341,12 +341,10 @@ var sha3 = function (value) {
         return returnValue;
     }
 };
-// module.exports = {
-//     keccak256: sha3
-// }
-var sha3_1 = require("./sha3");
-exports.sha3 = sha3_1.sha3;
-exports.isHexStrict = sha3_1.isHexStrict;
-exports.isHex = sha3_1.isHex;
-exports.toHex = sha3_1.toHex;
-exports.hexToBytes = sha3_1.hexToBytes;
+module.exports = {
+    sha3,
+    isHexStrict,
+    isHex,
+    hexToBytes,
+    isChecksum: checkAddressChecksum
+}

@@ -45,5 +45,4 @@ module.exports = {
     genPair,
     listKeys,
     extracPrivateKey,
-    toChecksumAddress
 };

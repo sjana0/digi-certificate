@@ -1,8 +1,8 @@
 "use strict";
-exports.__esModule = true;
 var randombytes = require("randombytes");
 var sha3 = require("./sha3");
-function toChecksumAddress(address) {
+
+var toChecksumAddress = (address) => {
     if (typeof address === undefined)
         return "";
     if (!(/^(0x)?[0-9a-f]{40}$/i.test(address))) {
@@ -22,8 +22,7 @@ function toChecksumAddress(address) {
     }
     return checksumAddress;
 }
-exports.toChecksumAddress = toChecksumAddress;
-function asciiToHex(str) {
+var asciiToHex = (str) => {
     if (!str) {
         return "0x00";
     }
@@ -34,8 +33,7 @@ function asciiToHex(str) {
     }
     return "0x" + hex;
 }
-exports.asciiToHex = asciiToHex;
-function hexToAscii(hex) {
+var hexToAscii = (hex) => {
     var i;
     var str;
     if (!sha3.isHexStrict(hex)) {
@@ -48,8 +46,14 @@ function hexToAscii(hex) {
         str += String.fromCharCode(parseInt(hex.substring(i, 2), 16));
     }
 }
-exports.hexToAscii = hexToAscii;
-function randomHex(size) {
+var randomHex = (size) => {
     return '0x' + randombytes["default"](size).toString('hex');
 }
-exports.randomHex = randomHex;
+
+module.exports = {
+    toChecksumAddress,
+    asciiToHex,
+    hexToAscii,
+    randomHex,
+    isChecksum: sha3.isChecksum
+};

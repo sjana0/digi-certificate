@@ -1,34 +1,40 @@
-class certIpfsMethods {
-    constructor(link) {
-        this.ipfsHttpClient = require('ipfs-http-client');
-        this.ipfs = this.ipfsHttpClient(link);
-    }
+let ipfsHttpClient = require('ipfs-http-client');
+let ipfs;
 
-    genCert = async (userPubKey, cert) => {
-        const results = [];
+var setIpfs = (link) => {
+    ipfs = ipfsHttpClient(link)
+};
+
+let genCert = async (userPubKey, cert) => {
+    let results = [];
+    if(ipfs) {
         const fileObj = [{
-            path: userPubKey + ".cert",
+            path: "certificates/" + userPubKey + ".cert",
             content: JSON.stringify(cert)
         }];
-        for await (const result of this.ipfs.add(fileObj)){
+        for await (const result of ipfs.add(fileObj)){
             console.log("result");
             results.push(result);
         }
-        return results;
+    } else {
+        results = new Error("set HttpProvider for ipfs first");
     }
-    
-    getCert = async (cid) => {
-        for await (const file of this.ipfs.get(cid)) {
-            const BufferList = require('bl/BufferList');
-            const content = new BufferList()
-            for await (const chunk of file.content) {
-              content.append(chunk)
-            }
-            return JSON.parse(content.toString());
+    return results;
+};
+
+let getCert = async (cid) => {
+    for await (const file of this.ipfs.get(cid)) {
+        const BufferList = require('bl/BufferList');
+        const content = new BufferList()
+        for await (const chunk of file.content) {
+            content.append(chunk)
         }
+        return JSON.parse(content.toString());
     }
-}
+};
 
 module.exports = {
-    digiCert: certIpfsMethods
+    setIpfs,
+    genCert,
+    getCert
 };

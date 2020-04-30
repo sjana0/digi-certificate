@@ -55,5 +55,6 @@ module.exports = {
     asciiToHex,
     hexToAscii,
     randomHex,
-    isChecksum: sha3.isChecksum
+    isChecksum: sha3.isChecksum,
+    sha3: sha3.sha3
 };

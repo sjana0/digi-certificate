@@ -1,6 +1,6 @@
 var Web3 = require('web3');
 var axios = require('axios');
-var web3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.io/v3/<your project id>'));
+var web3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.io/v3/0104fc70dc744b10bcbb51ae406d21ca'));
 
 async function getCurrentGasPrices() {
     let response = await axios.get('https://ethgasstation.info/json/ethgasAPI.json');
@@ -12,13 +12,9 @@ async function getCurrentGasPrices() {
     return prices;
 }
 
-let signSendTx = (txParams, privateKey) => {
+let signSendTx = async (txParams, privateKey) => {
     console.log("here1");
-    web3.eth.getTransactionCount(txParams.from, 'pending').then((nonce) => {
-        txParams.nonce = nonce;
-    }).catch(e => {
-        return e;
-    });
+    txParams.nonce = web3.utils.toHex(await web3.eth.getTransactionCount(txParams.from, 'pending'));
     console.log("txParams: ", txParams);
     console.log("nonce: ");
     console.log(txParams.nonce);
@@ -26,40 +22,42 @@ let signSendTx = (txParams, privateKey) => {
     txParams.data = web3.utils.toHex(txParams.data)
     console.log("here2");
     console.log(txParams);
-    web3.eth.estimateGas({ to: txParams.to, data: txParams.data }).then((gasEst) => {
-        txParams.gas = gasEst;
-    }).catch((err) => {
-        console.log(err);
-        throw err;
-    });
-    web3.eth.accounts.signTransaction(txParams, privateKey).then((signedTx) => {
-        console.log("here3");
-        console.log(signedTx.rawTransaction);
+    txParams.gas = (await web3.eth.estimateGas({ to: txParams.to, data: txParams.data })) * 5;
+    console.log("gas: ", txParams.gas);
+    let transaction = {
+        transactionHash: ''
+    };
+    
+    web3.eth.accounts.signTransaction(txParams, privateKey)
+    .then(async (signedTx) => {
         const rawTx = (signedTx.rawTransaction || signedTx.raw);
-        console.log("rawTx: ");
-        console.log(rawTx);
-        web3.eth.sendSignedTransaction(rawTx).then((tx) => {
-            console.log("tx: ", web3.utils.toHex(tx));
-            return web3.utils.toHex(tx);
-        });
-    }).catch((err) => {
+        console.log("rawTx: ", rawTx);
+        let tx = await web3.eth.sendSignedTransaction(rawTx);
+        return tx;
+    })
+    .then((tx) => {
+        console.log("tx: ", tx);
+        transaction.transactionHash = tx.transactionHash;
+    })
+    .catch((err) => {
         console.log(err);        
         return err;
     });
+    return transaction.transactionHash;
 }
 
-let getReceipt = (txHash) => {
-    web3.eth.getTransactionReceipt(txHash).then((txReceipt) => {
-        console.log("txReceipt: ");
-        console.log(txReceipt);
-    });
+let getReceipt = async (txHash) => {
+    try {
+        let transaction = (await web3.eth.getTransaction(txHash));
+        let inp = web3.utils.hexToUtf8(transaction.input);
+        return inp;
+    } catch(err) {
+        return new Error(err);
+    }
 }
-
-// let sign = (data, address) => {
-//     web3.eth.personal.accounts
-// }
 
 module.exports = {
     signSendTx,
-    getCurrentGasPrices
+    getCurrentGasPrices,
+    getReceipt
 };

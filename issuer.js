@@ -43,7 +43,7 @@ if(!isChecksum(candidatePubKey)) {
     console.log("checksum: ", candidatePubKey);
 }
 
-let passphrase = "long and hard and big and black and and..., and she started crying DAMN. Yeah steven she got raped by a black guy Again.";
+let passphrase = "long and hard and big and black and and..., and blah started crying DAMN. Yeah steven blah has got it by hat's off Again.";
 
 let uniqeCode = "a random hash or a secret key";
 
